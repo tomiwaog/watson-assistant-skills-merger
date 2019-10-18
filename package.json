@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bnb/metaverse.git"
+    "url": "git+https://github.com/tomiwaog/watson-assistant-skills-merger.git"
   },
   "keywords": [
     "Watson assistant merger",
@@ -20,7 +20,7 @@
   "author": "Tomiwa Ogunbamowo <contact@tomiwa.io> (http://tomiwa.io)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bnb/metaverse/issues"
+    "url": "https://github.com/tomiwaog/watson-assistant-skills-merger/issues"
   },
-  "homepage": "https://github.com/bnb/metaverse#readme"
+  "homepage": "https://github.com/tomiwaog/watson-assistant-skills-merger#readme"
 }
