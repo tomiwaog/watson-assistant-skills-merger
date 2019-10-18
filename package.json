@@ -1,0 +1,26 @@
+{
+  "name": "watson-assistant-skills-merger",
+  "version": "0.0.2",
+  "description": "Merges 2 Skills exported from Watson Assistant without the need to override the other",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js",
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bnb/metaverse.git"
+  },
+  "keywords": [
+    "Watson assistant merger",
+    "watson assistant skills",
+    "assistant skills merger",
+    "watson assistant skills merge"
+  ],
+  "author": "Tomiwa Ogunbamowo <contact@tomiwa.io> (http://tomiwa.io)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bnb/metaverse/issues"
+  },
+  "homepage": "https://github.com/bnb/metaverse#readme"
+}
