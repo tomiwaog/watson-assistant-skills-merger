@@ -14,14 +14,14 @@ No external NodeModules are required, hence no download or Internet connection r
 Merges 2 Wastson Assistant Skills exported from Watson Assistant without overriding the other. A feature currently not possible with IBM Watson Cloud Assistant Service
 
 # Error Validation
-Validatio is done ahead of the skillMerging process.
+Validation is done ahead of the skillMerging process.
 JSON Format validation checking is done, as well as additional checks to ensure JSON structure follows a typical exported skill from Watson Assistant.
 
 # How it works
 1. Check that both skills files are JSON
-2. Checks for properties usually found in exported Watson Assistant Skills
+2. Checks for properties usually found in exported Watson Assistant Skills e.g. workspaceId, skillID etc.
 3. Merges Skill2 to Skill1
 4. Copy or merge intents and entities in skill1 and skill2
 5. Merge Dialogs in skill1 and skill2
 5. Rename duplicates/conflicts
-6. Generates a new Skill titiled "MERGE+ skill1 +skill2"
+6. Generates a new Skill titiled "MERGE+ skill1 +skill2" which can be reuploaded to IBM Cloud.
