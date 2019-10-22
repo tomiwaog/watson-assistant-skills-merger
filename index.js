@@ -7,4 +7,4 @@ var file2 = require('./sample-skills-files/skill-SkillTwo'); //Location of your 
 
 
 var filesToMerge={'file1': file1,'file2': file2};
-var runProgram = require('./connector')(filesToMerge);
+require('./controller')(filesToMerge);
