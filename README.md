@@ -33,5 +33,23 @@ fileValidator.js - 2 components: 1 validating JSON and the other ensuring Watson
 index.js - Application entry point.
 controller.js - Act as the application controller/scheduler, runs the validation check, consequently the merger.
 
+# Using via Node Package Manager (NPM)
+1. Create a new js file i.e. myApp.js
+
+2. Create an app
+var app = require('watson-assistant-skills-merger');
+
+3. Set the locations of the files to be merged
+var file1 = require('./sample-skills-files/skill-SkillOne'); //Location of your skill1
+var file2 = require('./sample-skills-files/skill-SkillTwo'); //Location of your skill2
+
+4. Use the call the app main function
+app(file1, file2);
+
+5. install the NPM packages using "npm install --save watson-assistant-skills-merger"
+
+6. Run your app e.g. "node myApp.js"
+
+
 # Versioning
 SemVar Versioning (MAJOR.MINOR.PATCH)
