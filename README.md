@@ -7,7 +7,7 @@ User is expected to manually review the merged Skills upon reupload to IBM Cloud
 Anything_else node may appear twice in Result
 
 # Inputs
-2 Valid JSON files exported from IBM Watson Assistant
+2 Valid JSON files exported from IBM Watson Assistant, file locations to be used as app arguments.
 
 # Node Modules
 No external NodeModules are required, hence no download or Internet connection required to run program.
@@ -33,7 +33,7 @@ fileValidator.js - 2 components: 1 validating JSON and the other ensuring Watson
 index.js - Application entry point.
 controller.js - Act as the application controller/scheduler, runs the validation check, consequently the merger.
 
-# Using via Node Package Manager (NPM)
+# How-To using Node Package Manager (NPM)
 1. Create a new js file i.e. myApp.js
 
 2. Create an app
