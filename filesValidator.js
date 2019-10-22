@@ -24,9 +24,9 @@ function validateWASkill(skill){
     return true;
 }
 
-function validator (file1, file2){
+function validateBothFiles (file1, file2){
     var skill1 = file1, skill2 = file2;
-    console.log("Running validator against files!")
+    console.log("*** Running validator against files!")
     try{
         if (!validateFile(skill1))
             throw new TypeError('skill1 is not a valid JSON');
@@ -38,12 +38,11 @@ function validator (file1, file2){
         if (!validateWASkill(skill2))
             throw new TypeError('skill2 is not a valid Watson Assistant Skill');
     
-        console.log("should not run if error!")
-        require('./assistantSkillsMerger')(file1,file2);
+        console.log("*** Validation Check: No Exceptions violated!");
     }
     catch(error){
             console.log("Error message: "+error.message);
     }
 }
 
-module.exports = validator;
+module.exports = validateBothFiles;

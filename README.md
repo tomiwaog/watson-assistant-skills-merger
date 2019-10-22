@@ -25,3 +25,6 @@ JSON Format validation checking is done, as well as additional checks to ensure 
 5. Merge Dialogs in skill1 and skill2
 5. Rename duplicates/conflicts
 6. Generates a new Skill titiled "MERGE+ skill1 +skill2" which can be reuploaded to IBM Cloud.
+
+# Versioning
+SemVar Versioning (MAJOR.MINOR.PATCH)

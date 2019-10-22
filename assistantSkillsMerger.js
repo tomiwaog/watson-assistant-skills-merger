@@ -117,7 +117,7 @@ function combileDialogNodes(file1, indexofAppend, file2) {
                 currentNode.parent = renamedNodesMap[currentNode.parent];
             else
                 currentNode.parent = currentNode.parent + '_1';
-            console.log("Yes " + currentNode.dialog_node + " has  parent " + currentNode.parent)
+            // console.log("Yes " + currentNode.dialog_node + " has  parent " + currentNode.parent)
         }
         else if (tempHashMapDiagNodes[currentNode.previous_sibling]) {
 
@@ -126,10 +126,10 @@ function combileDialogNodes(file1, indexofAppend, file2) {
             else
                 currentNode.previous_sibling = currentNode.previous_sibling + '_1';
 
-            console.log("Yes " + currentNode.dialog_node + " has  previous node " + currentNode.previous_sibling);
+            // console.log("Yes " + currentNode.dialog_node + " has  previous node " + currentNode.previous_sibling);
         }
         if (tempHashMapDiagNodes[currentNode.dialog_node]) {
-            console.log("Found " + currentNode.title + " to be conflicting");
+            console.log("\nFound " + currentNode.title + " to be conflicting");
             //If current Node in file2 is a conflict, update it and push to file1
             // console.log("Yes "+ currentNode.dialog_node + " is a conflict!");
             if (renamedNodesMap[currentNode.dialog_node]) //If already renamed use, otherwise create
@@ -137,7 +137,7 @@ function combileDialogNodes(file1, indexofAppend, file2) {
             else
                 currentNode.dialog_node = currentNode.dialog_node + '_1';
 
-            console.log("After conflict rename " + currentNode.dialog_node);
+            console.log("After conflict, NODEID renamed to " + currentNode.dialog_node);
         }
         if (dialogNode == firstNodeInFile2)
         dialogNodes2[dialogNode].previous_sibling = nodeBeforeTargetDelete;     //i.e. Last of File1 + first of File2
@@ -145,7 +145,7 @@ function combileDialogNodes(file1, indexofAppend, file2) {
 
     }
 
-    console.log(renamedNodesMap);
+    // console.log(renamedNodesMap);
     file1.name = file1.name + "-" + file2.name;
     return file1;
 }
@@ -154,7 +154,8 @@ function writeToFile(jsonData, fileNameLoc) {
     var fs = require('fs');
     fs.writeFile(fileNameLoc, JSON.stringify(jsonData), function (err) {
         if (err) throw err;
-        // console.log('Combined file saved!');
+        console.log('*** Writing Merged Output to file!');
+        console.log("\n*** Merging Completed!!!")
     }
     );
 }
