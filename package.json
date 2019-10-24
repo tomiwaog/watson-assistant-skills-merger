@@ -1,6 +1,6 @@
 {
   "name": "watson-assistant-skills-merger",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Merges 2 Skills exported from Watson Assistant without the need to override the other",
   "main": "index.js",
   "scripts": {
