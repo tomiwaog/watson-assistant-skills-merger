@@ -26,7 +26,7 @@
     }
   },
   "skill_id": "58c5e2fb-d061-4dfb-a9b2-d2fadfca49e8",
-  "description": "Skill One",
+  "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
   "dialog_nodes": [
     {
       "type": "standard",

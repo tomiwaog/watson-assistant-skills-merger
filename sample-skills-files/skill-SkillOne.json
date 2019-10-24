@@ -26,7 +26,7 @@
     }
   },
   "skill_id": "58c5e2fb-d061-4dfb-a9b2-d2fadfca49e8",
-  "description": "Skill One",
+  "description": "Skill One, Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.",
   "dialog_nodes": [
     {
       "type": "standard",
