@@ -4,7 +4,11 @@ function combineWatsonSkills(file11, file22) {
     var combinedJSON = mergeIntentsAndEntities(file1, file2);
     var indexOfAppend = searchNodeByTitle(file1, "Anything else");
     combileDialogNodes(file1, indexOfAppend, file2);
-    writeToFile(combinedJSON, "MERGED-" + file1.name + ".json");
+    var outputSkillName = updateMergedSkillProp(file1.name, file2.name, "skillname");
+    var outputSkillDesc = updateMergedSkillProp(file1.description, file2.description, "description");
+    combinedJSON.name = outputSkillName; //Update new skill name before writing to file
+    combinedJSON.description = outputSkillDesc;
+    writeToFile(combinedJSON, outputSkillName);
     return file2;
 }
 
@@ -72,7 +76,6 @@ function findFirstDialogNodeLoc(jsonToSearch) {
 }
 
 function findLastDialogNode(jsonToSearch) {
-
     return -1;
 }
 function deleteNode(jsonToDeleteFrom, nodeIndexToDelete) {
@@ -109,7 +112,7 @@ function combileDialogNodes(file1, indexofAppend, file2) {
     var renamedNodesMap = {};
     var dialogNodes2 = file2.dialog_nodes; //SecondObject
     for (dialogNode in dialogNodes2) { //Iterating File2
-    var currentNode = dialogNodes2[dialogNode];
+        var currentNode = dialogNodes2[dialogNode];
         //Update CurrentNode Parent and/or siblings
         if (tempHashMapDiagNodes[currentNode.parent]) {
 
@@ -140,29 +143,50 @@ function combileDialogNodes(file1, indexofAppend, file2) {
             console.log("After conflict, NODEID renamed to " + currentNode.dialog_node);
         }
         if (dialogNode == firstNodeInFile2)
-        dialogNodes2[dialogNode].previous_sibling = nodeBeforeTargetDelete;     //i.e. Last of File1 + first of File2
+            dialogNodes2[dialogNode].previous_sibling = nodeBeforeTargetDelete;     //i.e. Last of File1 + first of File2
         file1.dialog_nodes.push(currentNode);
 
     }
 
     // console.log(renamedNodesMap);
-    file1.name = file1.name + "-" + file2.name;
+    // file1.name = file1.name + "-" + file2.name;
     return file1;
 }
 
-function writeToFile(jsonData, fileNameLoc) {
+function writeToFile(jsonData, outputFileName, fileType) {
     var fs = require('fs');
-    fs.writeFile(fileNameLoc, JSON.stringify(jsonData), function (err) {
-        if (err) throw err;
-        console.log('*** Writing Merged Output to file!');
-        console.log("\n*** Merging Completed!!!")
-    }
-    );
+
+    if (!fileType || fileType === "json") //If unset or partially set (without .)
+        fileType = ".json"
+
+    if (fileType === ".json") {
+        fs.writeFile(outputFileName + fileType, JSON.stringify(jsonData), function (err) {
+            if (err) throw err;
+            console.log('\n*** Writing Merged Output to file!');
+            console.log("*** Generated Output filename: '" + outputFileName+".json'");
+            console.log("*** Merging Completed!!!");
+        }
+        );
+    } else
+        console.log("NO files generated! Currently only support JSON output !!!");
 }
 
+function updateMergedSkillProp(skill1, skill2, updateType) {//Accomodate Watson's 64 max character skillname length
+    if (updateType === "skillname") maxLength = 64;
+    if (updateType === "description") maxLength = 128;
+
+    if ((skill1.length + skill2.length) > (maxLength - 7)) //Factoring space for "MERGED" text
+        skill1 = skill1.substring(0, (maxLength - 7) / 2); //Halfs the length skill1 to accomodate skill2 
+
+    var updatedText = ("MERGED_" + skill1 + "__" + skill2).substring(0, maxLength);
+    // console.log("After '" + updateType + "' property update, property length = " + updatedText.length);
+    return updatedText;
+}
+
+
 //Test Module
-// var file1 = require('./skill-HR-PROD');
-// var file2 = require('./skill-Jack-Jack');
+// var file1 = require('./sample-skills-files/skill-HR-PROD');
+// var file2 = require('./sample-skills-files/skill-Jack-Jack');
 // combineWatsonSkills(file1, file2);
 
 module.exports = combineWatsonSkills;
