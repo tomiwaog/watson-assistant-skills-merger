@@ -1,7 +1,7 @@
 {
   "name": "watson-assistant-skills-merger",
   "version": "0.1.3",
-  "description": "Merges 2 Skills exported from Watson Assistant without the need to override the other",
+  "description": "Combines and merges seperate IBM Watson Assistant Dialog Skill into one; integrates intents, entities and dialogs of one skill with another without one overriding the other.",
   "main": "index.js",
   "scripts": {
     "build": "node index.js",
@@ -15,7 +15,7 @@
     "Watson assistant merger",
     "watson assistant skills",
     "assistant skills merger",
-    "watson assistant skills merge"
+    "watson assistant skills merge","IBM watson skills merger", "Dialogue skill merger"
   ],
   "author": "Tomiwa Ogunbamowo <contact@tomiwa.io> (http://tomiwa.io)",
   "license": "MIT",
