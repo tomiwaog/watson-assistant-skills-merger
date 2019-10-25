@@ -8,6 +8,8 @@ function combineWatsonSkills(file11, file22) {
     var outputSkillDesc = updateMergedSkillProp(file1.description, file2.description, "description");
     combinedJSON.name = outputSkillName; //Update new skill name before writing to file
     combinedJSON.description = outputSkillDesc;
+
+    runOutputFileReport(combinedJSON);
     writeToFile(combinedJSON, outputSkillName);
     return file2;
 }
@@ -91,6 +93,7 @@ function deleteNode(jsonToDeleteFrom, nodeIndexToDelete) {
 }
 
 function combileDialogNodes(file1, indexofAppend, file2) {
+    console.log("\n* combining dialog nodes *")
     //indexOfAppend is the index of Anything else or last element
     //Expected inputs are json
     var nodeBeforeTargetDelete = file1.dialog_nodes[indexofAppend].previous_sibling; //Temp Storage
@@ -163,7 +166,7 @@ function writeToFile(jsonData, outputFileName, fileType) {
         fs.writeFile(outputFileName + fileType, JSON.stringify(jsonData), function (err) {
             if (err) throw err;
             console.log('\n*** Writing Merged Output to file!');
-            console.log("*** Generated Output filename: '" + outputFileName+".json'");
+            console.log("Generated Output filename: '" + outputFileName + ".json'");
             console.log("*** Merging Completed!!!");
         }
         );
@@ -171,7 +174,8 @@ function writeToFile(jsonData, outputFileName, fileType) {
         console.log("NO files generated! Currently only support JSON output !!!");
 }
 
-function updateMergedSkillProp(skill1, skill2, updateType) {//Accomodate Watson's 64 max character skillname length
+function updateMergedSkillProp(skill1, skill2, updateType) {
+    //Accomodate Watson's 64 max character skillname length
     if (updateType === "skillname") maxLength = 64;
     if (updateType === "description") maxLength = 128;
 
@@ -179,14 +183,31 @@ function updateMergedSkillProp(skill1, skill2, updateType) {//Accomodate Watson'
         skill1 = skill1.substring(0, (maxLength - 7) / 2); //Halfs the length skill1 to accomodate skill2 
 
     var updatedText = ("MERGED_" + skill1 + "__" + skill2).substring(0, maxLength);
+
     // console.log("After '" + updateType + "' property update, property length = " + updatedText.length);
     return updatedText;
 }
 
+function runOutputFileReport(combinedJSON){
 
+    console.log("\n*** Running Error report on generated output *** ");
+
+    var uploadViolation = false;
+    if (combinedJSON.intents.length > 100) {
+        uploadViolation = true;
+        console.log("ERROR: Generated file has exceeded intents limit");
+    } 
+    if (combinedJSON.entities.length > 25) {
+        uploadViolation = true;
+        console.log("ERROR: Generated file has exceeded entities limit");
+    }
+    else if (uploadViolation) {
+        console.log("*** Please Note: Output File will be generated, however will not upload in Watson");
+    }
+}
 //Test Module
-// var file1 = require('./sample-skills-files/skill-HR-PROD');
-// var file2 = require('./sample-skills-files/skill-Jack-Jack');
+// var file1 = require('./sample-skills-files/skill-SkillOne');
+// var file2 = require('./sample-skills-files/skill-SkillTwo');
 // combineWatsonSkills(file1, file2);
 
 module.exports = combineWatsonSkills;
