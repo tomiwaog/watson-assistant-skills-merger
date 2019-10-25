@@ -61,7 +61,15 @@ app(file1, file2);
 ```
 npm install --save watson-assistant-skills-merger
 ```
-6. Run your app e.g. "node myApp.js"
+6. Run your app e.g. "node myApp.js".
+
+Your myApp.js should look identical to the folowing:
+```
+var app = require('watson-assistant-skills-merger');
+var file1 = require('./skill-SkillOne'); //Location of your skill1
+var file2 = require('./folder/skill-SkillTwo'); //Location of your skill2
+app(file1, file2);
+```
 
 ## Authors
 * **Tomiwa Ogunbamowo** - [Tomiwa's GitHub](https://github.com/tomiwaog)
