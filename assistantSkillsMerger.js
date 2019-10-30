@@ -45,12 +45,7 @@ function mergeIntentsAndEntities(file1, file2) {
     }
 
     for (entityObject in entitiesFile2) {
-        if (!entitiesInFile1[entityObject]) {
-            console.log("UNDEFINE PLACEHOLDER at LOC"+ entityObject + " between ");
-            console.log(JSON.stringify(entitiesInFile2[entityObject-1].entity) + " and ");
-            console.log(JSON.stringify(entitiesInFile21[entityObject+1].entity));
-        }
-        var entityName = entitiesFile2[entityObject].entity;
+        var entityName = entitiesFile2[entityObject].entity;A
         if (!tempEntityHashMap[entityName.toLowerCase()])
             file1.entities.push(entitiesFile2[entityObject]); //adds entities from Skills2 to Skill
     }
