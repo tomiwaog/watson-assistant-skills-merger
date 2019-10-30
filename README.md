@@ -31,7 +31,6 @@ JSON Format validation checking is done, as well as additional checks to ensure 
 6. Generates a newly merged skill which can be reuploaded to IBM Cloud.
 
 ## Modules Definition:
-
 assistantSkillsMerger.js - Does the actual merging. one can download the "assistantSkillsMerger.js" and call the "combineWatsonSkills" function to merge 2 seperate Assistant skills.
 
 fileValidator.js - 2 components: 1 validating JSON and the other ensuring Watson skill is valid.
@@ -47,7 +46,6 @@ controller.js - Act as the application controller/scheduler, runs the validation
 ```
 var app = require('watson-assistant-skills-merger');
 ```
-
 3. Set the locations of the files to be merged
 ```
 var file1 = require('./sample-skills-files/skill-SkillOne'); //Location of your skill1
@@ -70,6 +68,9 @@ var file1 = require('./skill-SkillOne'); //Location of your skill1
 var file2 = require('./folder/skill-SkillTwo'); //Location of your skill2
 app(file1, file2);
 ```
+
+## Setting Watson Assistant pricing plans 
+You can configure the type of Watson plan in the settings.json file. You can set the value to plan "lite" or "business".
 
 ## Authors
 * **Tomiwa Ogunbamowo** - [Tomiwa's GitHub](https://github.com/tomiwaog)
