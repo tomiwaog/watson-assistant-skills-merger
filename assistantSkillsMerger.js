@@ -93,9 +93,9 @@ function findLastDialogNode(jsonToSearch) {
     for (i in jsonToSearch.dialog_nodes) {
         var dialogNode = jsonToSearch.dialog_nodes[i].dialog_node;
         if (!jsonToSearch.dialog_nodes[i].parent && !hashMapReferredTo[dialogNode]) {
-            console.log("Last Item found " + dialogNode);
-            console.log("it has prev sibling " + jsonToSearch.dialog_nodes[i].previous_sibling);
-            console.log("it has prev parent: " + jsonToSearch.dialog_nodes[i].parent);
+            // console.log("Last Item found " + dialogNode);
+            // console.log("it has prev sibling " + jsonToSearch.dialog_nodes[i].previous_sibling);
+            // console.log("it has prev parent: " + jsonToSearch.dialog_nodes[i].parent);
             //If Node of the 
             return i;
         }
@@ -129,8 +129,6 @@ function combileDialogNodes(file1, indexofAppend, file2) {
     // console.log(tempHashMapDiagNodes);
 
     var firstNodeInFile2 = findFirstDialogNodeLoc(file2); //gets location of first Node in file2 for MERGE
-
-    console.log("first Node in FIle2-> " + file2.dialog_nodes[firstNodeInFile2].title);
 
     var renamedNodesMap = {};
     var dialogNodes2 = file2.dialog_nodes; //SecondObject
