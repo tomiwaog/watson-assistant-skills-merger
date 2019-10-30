@@ -1,4 +1,4 @@
-
+watsonPlan = require('./settings').plan;
 function validateFile(file) {
     var text = JSON.stringify(file);
     var isJson = (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
@@ -41,13 +41,12 @@ function validateBothFiles(file1, file2) {
             throw new TypeError('skill2 is not a valid Watson Assistant Skill');
 
         if (!isIntentsEntitiesExceeeded(skill1))
-            throw new TypeError('skill1 intents counts exceeds Watsons limit. Limit = 100, Maximum entities limit exceeded. Limit = 25.');
+            throw new TypeError('skill1 intents counts exceeds Watsons limit. Maximum entities limit exceeded.');
 
         if (skill2 && !isIntentsEntitiesExceeeded(skill2))
-            throw new TypeError('skill2 intents counts exceeds Watsons limit. Limit = 100, Maximum entities limit exceeded. Limit = 25.');
+            throw new TypeError('skill2 intents counts exceeds Watsons limit. Maximum entities limit exceeded.');
         
             console.log("*** Validation Check: No Exceptions violated!");
-
     }
     catch (error) {
         console.log("\nError message: " + error.message);
@@ -55,8 +54,19 @@ function validateBothFiles(file1, file2) {
 }
 
 function isIntentsEntitiesExceeeded(skill) {
+    var plan = require('./settings').plan;
     var skill1IntentsCount = skill.intents.length, skill1EntitiesCount = skill.entities.length;
-    if (skill1IntentsCount > 100 || skill1EntitiesCount > 25) {
+    var entityLimit, intentLimit;
+
+    if (plan =="business"){
+        intentLimit = 2000;
+        entityLimit = 2000;
+    }else if (plan =="lite"){
+        intentLimit = 10;
+        entityLimit = 25;
+    }
+
+    if (skill1IntentsCount > intentLimit || skill1EntitiesCount > entityLimit) {
         console.log("Warning!!! :"+skill.name+ " has intent count: "+ skill1IntentsCount+ " and entity count: "+skill1EntitiesCount);
         return false;
     }
