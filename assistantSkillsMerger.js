@@ -2,7 +2,8 @@ function combineWatsonSkills(file11, file22) {
     //Expected inputs are fileName/location
     var file1 = file11; var file2 = file22;
     var combinedJSON = mergeIntentsAndEntities(file1, file2);
-    var indexOfAppend = searchNodeByTitle(file1, "Anything else");
+    // var indexOfAppend = searchNodeByTitle(file1, "Anything else");
+    var indexOfAppend = findLastDialogNode(file1);
     combileDialogNodes(file1, indexOfAppend, file2);
     var outputSkillName = updateMergedSkillProp(file1.name, file2.name, "skillname");
     var outputSkillDesc = updateMergedSkillProp(file1.description, file2.description, "description");
@@ -27,24 +28,30 @@ function mergeIntentsAndEntities(file1, file2) {
     for (intentObject in intentsInFile1) { //Copies each intents into temp hash
         var intentName = intentsInFile1[intentObject].intent;
         // console.log(intentName);
-        tempHashMap[intentName] = intentName;
+        tempHashMap[intentName.toLowerCase()] = intentName;
     }
     for (intentObject in intentsArr2) {
         var intentName = intentsArr2[intentObject].intent;
-        if (!tempHashMap[intentName]) { //Avoid duplicate intents
+        if (!tempHashMap[intentName.toLowerCase()]) { //Avoid duplicate intents, check Cases
             // console.log(intentName+ " doesnt exist and added!")
             file1.intents.push(intentsArr2[intentObject]); //adds intents from Skills2 to Skill1
         }
     }
 
-    tempHashMap = {};
+    var tempEntityHashMap = {};
     for (entityObject in entitiesInFile1) { //Copies each intents into temp hash
         var entityName = entitiesInFile1[entityObject].entity;
-        tempHashMap.enitityName = entityName;
+        tempEntityHashMap[entityName.toLowerCase()] = 1; //Anything could be stored here
     }
+
     for (entityObject in entitiesFile2) {
-        var entityName = entitiesInFile1[entityObject].entity;
-        if (!tempHashMap.entityName)
+        if (!entitiesInFile1[entityObject]) {
+            console.log("UNDEFINE PLACEHOLDER at LOC"+ entityObject + " between ");
+            console.log(JSON.stringify(entitiesInFile2[entityObject-1].entity) + " and ");
+            console.log(JSON.stringify(entitiesInFile21[entityObject+1].entity));
+        }
+        var entityName = entitiesFile2[entityObject].entity;
+        if (!tempEntityHashMap[entityName.toLowerCase()])
             file1.entities.push(entitiesFile2[entityObject]); //adds entities from Skills2 to Skill
     }
     // console.log(file1);
@@ -52,12 +59,12 @@ function mergeIntentsAndEntities(file1, file2) {
 }
 
 function searchNodeByTitle(jsonToSearch, searchValue) {
-    //Expected inputs are json
+    //Expected inputs are json, returns nodePos
     var dialogueNodeFile = jsonToSearch.dialog_nodes;
     for (eachNode in dialogueNodeFile) {
         var currentNode = dialogueNodeFile[eachNode];
         if (currentNode.title === searchValue)
-            return eachNode;
+            return eachNode; //Position of lastNode
     }
     return -1;
 }
@@ -78,6 +85,26 @@ function findFirstDialogNodeLoc(jsonToSearch) {
 }
 
 function findLastDialogNode(jsonToSearch) {
+    var hashMapReferredTo = {};
+    //Writing to HashMap
+    for (i in jsonToSearch.dialog_nodes) {
+        if (!(jsonToSearch.dialog_nodes[i].parent)) { //Add all root nodes to Hash
+            var prev = jsonToSearch.dialog_nodes[i].previous_sibling; //Add all previous
+            // console.log("Previous is "+ prev);
+            hashMapReferredTo[prev] =1; //push all previous item to hashmap
+        }
+    }
+    //Checking for Items not referred to
+    for (i in jsonToSearch.dialog_nodes) {
+        var dialogNode = jsonToSearch.dialog_nodes[i].dialog_node;
+        if (!jsonToSearch.dialog_nodes[i].parent && !hashMapReferredTo[dialogNode]) {
+            console.log("Last Item found " + dialogNode);
+            console.log("it has prev sibling " + jsonToSearch.dialog_nodes[i].previous_sibling);
+            console.log("it has prev parent: " + jsonToSearch.dialog_nodes[i].parent);
+            //If Node of the 
+            return i;
+        }
+    }
     return -1;
 }
 function deleteNode(jsonToDeleteFrom, nodeIndexToDelete) {
@@ -94,12 +121,10 @@ function deleteNode(jsonToDeleteFrom, nodeIndexToDelete) {
 
 function combileDialogNodes(file1, indexofAppend, file2) {
     console.log("\n* combining dialog nodes *")
-    //indexOfAppend is the index of Anything else or last element
+    //indexOfAppend is the index of last element
     //Expected inputs are json
-    var nodeBeforeTargetDelete = file1.dialog_nodes[indexofAppend].previous_sibling; //Temp Storage
-    console.log("Previous item to be preserved: " + nodeBeforeTargetDelete);
-
-    deleteNode(file1, indexofAppend); //Deletes the Anything else /lastNode
+    var lastItemFromFile1 = file1.dialog_nodes[indexofAppend].dialog_node; //Temp Storage
+    console.log("Last Node in file1-> " + lastItemFromFile1);
 
     //Logs all current dialogueNodes in HashMap
     var tempHashMapDiagNodes = {};
@@ -146,7 +171,7 @@ function combileDialogNodes(file1, indexofAppend, file2) {
             console.log("After conflict, NODEID renamed to " + currentNode.dialog_node);
         }
         if (dialogNode == firstNodeInFile2)
-            dialogNodes2[dialogNode].previous_sibling = nodeBeforeTargetDelete;     //i.e. Last of File1 + first of File2
+            dialogNodes2[dialogNode].previous_sibling = lastItemFromFile1;     //i.e. Last of File1 + first of File2
         file1.dialog_nodes.push(currentNode);
 
     }
@@ -188,16 +213,25 @@ function updateMergedSkillProp(skill1, skill2, updateType) {
     return updatedText;
 }
 
-function runOutputFileReport(combinedJSON){
+function runOutputFileReport(combinedJSON) {
+    var plan = require('./settings').plan;
+    var entityLimit, intentLimit;
 
+    if (plan == "business") {
+        intentLimit = 2000;
+        entityLimit = 2000;
+    } else if (plan == "lite") {
+        intentLimit = 100;
+        entityLimit = 25;
+    }
     console.log("\n*** Running Error report on generated output *** ");
 
     var uploadViolation = false;
-    if (combinedJSON.intents.length > 100) {
+    if (combinedJSON.intents.length > intentLimit) {
         uploadViolation = true;
         console.log("ERROR: Generated file has exceeded intents limit");
-    } 
-    if (combinedJSON.entities.length > 25) {
+    }
+    if (combinedJSON.entities.length > entityLimit) {
         uploadViolation = true;
         console.log("ERROR: Generated file has exceeded entities limit");
     }
