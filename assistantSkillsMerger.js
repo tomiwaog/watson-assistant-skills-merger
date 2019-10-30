@@ -222,11 +222,11 @@ function runOutputFileReport(combinedJSON) {
     var uploadViolation = false;
     if (combinedJSON.intents.length > intentLimit) {
         uploadViolation = true;
-        console.log("ERROR: Generated file has exceeded intents limit");
+        console.log("ERROR: Generated file has exceeded intents limit.");
     }
     if (combinedJSON.entities.length > entityLimit) {
         uploadViolation = true;
-        console.log("ERROR: Generated file has exceeded entities limit");
+        console.log("ERROR: Generated file has exceeded entities limit.");
     }
     else if (uploadViolation) {
         console.log("*** Please Note: Output File will be generated, however will not upload in Watson");
