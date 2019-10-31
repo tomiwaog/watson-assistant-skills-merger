@@ -94,7 +94,7 @@ function getUniqueNodeID(listOfKnownNodes, incoming) {
     var renamed = incoming;
     while (listOfKnownNodes[renamed])
         renamed = renamed + '_1';
-    console.log(incoming + " was renamed to " + renamed);
+    // console.log(incoming + " was renamed to " + renamed);
     return renamed;
 }
 
@@ -109,7 +109,7 @@ function writeToFile(jsonData, outputFileName, fileType) {
             if (err) throw err;
             console.log('\n*** Writing Merged Output to file!');
             console.log("Generated Output filename: '" + outputFileName + ".json'");
-            console.log("*** Merging Completed!!!");
+            console.log("*** Merging Complete !!!");
         }
         );
     } else
@@ -161,13 +161,14 @@ function mergeDialogNodes(file1, locFile1LastItem, file2) {
     console.log("\n* combining dialog nodes *");
     //indexOfAppend is the index of last element. Expected inputs are json
     var file1LastNodeID = file1.dialog_nodes[locFile1LastItem].dialog_node;
-    var file2FirstNodeID = findFirstDialogNodeLoc(file2); //gets location of first Node in file2 for MERGE
+    var file2FirstNodeLoc = findFirstDialogNodeLoc(file2); //gets location of first Node in file2 for MERGE
+
 
     var file1DialogNodesArr = file1.dialog_nodes; // File1's dialogNodes Array
     var tempHashMapDiagNodes = {}; //Container for File1's dialogID
     for (var i in file1DialogNodesArr) //Stores each dialogID of firstFile in a tempHashMap
         tempHashMapDiagNodes[file1DialogNodesArr[i].dialog_node] = file1DialogNodesArr[i].dialog_node;
-    console.log("displaying all Nodes: \n" + JSON.stringify(tempHashMapDiagNodes) + "\n"); //DELETE
+    // console.log("displaying all Nodes: \n" + JSON.stringify(tempHashMapDiagNodes) + "\n"); //DELETE
 
     var renamedNodesMap = {}; //
     var dialogNodes2 = file2.dialog_nodes; //File2's dialogNodes Array
@@ -175,35 +176,48 @@ function mergeDialogNodes(file1, locFile1LastItem, file2) {
     for (var i in dialogNodes2) { //Adding DialogNodes from file2 to file1
         var currentNode = dialogNodes2[i];
 
-        //Conflicts resolution
-        if (!renamedNodesMap[dialogNodes2]) { // if Item in file2 is not already Renamed and is a Conflict, Remember it by storing to Renamed
-            if (tempHashMapDiagNodes[currentNode.dialog_node])
-                renamedNodesMap[currentNode.dialog_node] = getUniqueNodeID(tempHashMapDiagNodes, currentNode.dialog_node);
-
-            if (tempHashMapDiagNodes[currentNode.parent])
-                renamedNodesMap[currentNode.parent] = getUniqueNodeID(tempHashMapDiagNodes, currentNode.parent);
-
-            if (tempHashMapDiagNodes[currentNode.previous_sibling])
-                renamedNodesMap[currentNode.previous_sibling] = getUniqueNodeID(tempHashMapDiagNodes, currentNode.previous_sibling);
-        }
-        else { // if Item in file2 is already renamed, The use Renamed Value;
-            if (tempHashMapDiagNodes[currentNode.dialog_node]) {
-                renamedNodesMap[currentNode.dialog_node] = renamedNodesMap[currentNode.dialog_node];
+        if (tempHashMapDiagNodes[currentNode.dialog_node]) {//If item is a conflict, rename and update nodeID
+            if (renamedNodesMap[currentNode.dialog_node]) {
+                currentNode.dialog_node = renamedNodesMap[currentNode.dialog_node]; //If key already present from previous renaming, use value of key
             }
-            if (tempHashMapDiagNodes[currentNode.parent])
-                renamedNodesMap[currentNode.parent] = renamedNodesMap[currentNode.parent];
-            if (tempHashMapDiagNodes[currentNode.previous_sibling])
-                renamedNodesMap[currentNode.previous_sibling] = renamedNodesMap[currentNode.previous_sibling];
+            else {
+                var renamedNode = getUniqueNodeID(tempHashMapDiagNodes, currentNode.dialog_node);
+                console.log("\nFound Node " + currentNode.title + " to be conflicting");
+                console.log(currentNode.dialog_node + " renamed to " + renamedNode);
+                renamedNodesMap[currentNode.dialog_node] = renamedNode; //Add oldName as key and new name as value;
+                currentNode.dialog_node = renamedNode; //CurentNode ID is updated to RenamedID
+            }
+        }
+        if (tempHashMapDiagNodes[currentNode.previous_sibling]) {
+            if (renamedNodesMap[currentNode.previous_sibling]) {
+                currentNode.previous_sibling = renamedNodesMap[currentNode.previous_sibling]; //If key already present from previous renaming, use value of key
+            }
+            else {
+                var renamedNode = getUniqueNodeID(tempHashMapDiagNodes, currentNode.previous_sibling);
+                console.log("\nFound Sibling [" + currentNode.parent + "] to be conflicting");
+                console.log(currentNode.previous_sibling + " renamed to " + renamedNode);
+                renamedNodesMap[currentNode.previous_sibling] = renamedNode; //Add oldName as key and new name as value;
+                currentNode.previous_sibling = renamedNode; //CurentNode ID is updated to RenamedID
+            }
+        }
+        if (tempHashMapDiagNodes[currentNode.parent]) {
+            if (renamedNodesMap[currentNode.parent]) {
+                currentNode.parent = renamedNodesMap[currentNode.parent]; //If key already present from previous renaming, use value of key
+            }
+            else {
+                var renamedNode = getUniqueNodeID(tempHashMapDiagNodes, currentNode.parent);
+                console.log("\nFound Parent [" + currentNode.parent + "] to be conflicting");
+                console.log(currentNode.parent + " renamed to " + renamedNode);
+                renamedNodesMap[currentNode.parent] = renamedNode; //Add oldName as key and new name as value;
+                currentNode.parent = renamedNode; //CurentNode ID is updated to RenamedID
+            }
         }
 
-        //The merging of lastNode from File1 and firstNode from File2
-        if (i == file2FirstNodeID)
-            currentNode.previous_sibling = file1LastNodeID;     //i.e. Last of File1 + first of File2
-
-        if (!tempHashMapDiagNodes[currentNode.dialog_node])
-            file1.dialog_nodes.push(currentNode); //Adds all nodes file2 to file1
+        if (i == file2FirstNodeLoc) {
+            dialogNodes2[file2FirstNodeLoc].previous_sibling = file1LastNodeID; //Merges firstNod in file2 to 
+        }
+        file1.dialog_nodes.push(currentNode);
     }
     return file1;
 }
-
 module.exports = combineWatsonSkills;

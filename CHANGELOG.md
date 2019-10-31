@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 Collison resoluton for multiple level of skills
 ### Fixed
-Collisions found in dialog_nodes for Skills Re-merged multiple times.
+Collisions found in dialog_nodes ERROR for Skills Re-merged multiple times.
 
 ### Removed
 - Redundant searchNodeByTitle functionality.
