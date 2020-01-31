@@ -5,6 +5,7 @@ function combineWatsonSkills(file11, file22) {
     // var indexOfAppend = searchNodeByTitle(file1, "Anything else");
     var indexOfAppend = findLastDialogNode(file1);
     mergeDialogNodes(file1, indexOfAppend, file2);
+    console.log("Merging" + file1.name + " and " + file2.name); 
     var outputSkillName = updateMergedSkillProp(file1.name, file2.name, "skillname");
     var outputSkillDesc = updateMergedSkillProp(file1.description, file2.description, "description");
     combinedJSON.name = outputSkillName; //Update new skill name before writing to file
@@ -116,8 +117,11 @@ function writeToFile(jsonData, outputFileName, fileType) {
         console.log("NO files generated! Currently only support JSON output !!!");
 }
 
-function updateMergedSkillProp(skill1, skill2, updateType) {
+function updateMergedSkillProp(skill1, skill2, updateType) { //Naming function for merged File
     //Accomodate Watson's 64 max character skillname length
+    if(!skill1) skill1 = "skill1"; if(!skill2) skill2 = "skill2";
+    console.log(skill1);
+    console.log(skill2);
     if (updateType === "skillname") maxLength = 64;
     if (updateType === "description") maxLength = 128;
 

@@ -11,14 +11,18 @@ function validateFile(file) {
 function validateWASkill(skill) {
     //Known /common Watson Assistant Skill properties
     validSkill = {
-        hasSkillId: skill.skill_id,
-        hasWorkspaceID: skill["workspace_id"],
-        hasIntent: skill["intents"]
+        hasIntent: skill["intents"],
+        hasEntity: skill["entities"]
     }
 
     //If any of the common properties are missing, then its not a valid Skill
-    for (eachPropery in validSkill) {
-        if (!validSkill[eachPropery]) return false;
+    // console.log(validSkill);
+    for (eachProperty in validSkill) {
+        if (!validSkill[eachProperty]) {
+            return false;
+        }
+        
+        // console.log(JSON.stringify(validSkill[eachPropery]) );
     }
 
     return true;
@@ -49,13 +53,15 @@ function validateBothFiles(file1, file2) {
             console.log("*** Validation Check: No Exceptions violated!");
     }
     catch (error) {
-        console.log("\nError message: " + error.message);
+        console.log(error);
+        console.log("\n Validation - Error message: " + error.message);
     }
 }
 
 function isIntentsEntitiesExceeeded(skill) {
     var plan = require('./settings').plan;
-    var skill1IntentsCount = skill.intents.length, skill1EntitiesCount = skill.entities.length;
+    var skill1IntentsCount = skill.intents.length;
+    var skill1EntitiesCount = skill.entities.length;
     var entityLimit, intentLimit;
 
     if (plan =="business"){

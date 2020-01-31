@@ -5,12 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.2.3] - 2020-01-31
+- Regression Fix
+- Repo Update
+## [0.2.1] - 2020-01-31
+- Fixed untracked bugs
+- Fixed Skills conflicts validations
+
+## [0.1.7] - 2019-12-17
+- Fixed validation bug in filesValidtor module.
 
 ## [0.1.6] - 2019-10-31
 ### Added
-Collison resoluton for multiple level of skills
+- Collison resoluton for multiple level of skills
 ### Fixed
-Collisions found in dialog_nodes ERROR for Skills Re-merged multiple times.
+- Collisions found in dialog_nodes ERROR for Skills Re-merged multiple times.
 
 ### Removed
 - Redundant searchNodeByTitle functionality.

@@ -1,6 +1,6 @@
 {
   "name": "watson-assistant-skills-merger",
-  "version": "0.1.6",
+  "version": "0.2.3",
   "description": "Combines and merges seperate IBM Watson Assistant Dialog Skill into one; integrates intents, entities and dialogs of one skill with another without one overriding the other.",
   "main": "index.js",
   "scripts": {
